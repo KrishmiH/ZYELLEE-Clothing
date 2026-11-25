@@ -126,13 +126,10 @@ export default function CartPage() {
               </span>
             </div>
 
-            <button
-              className="checkout-button"
-              onClick={() =>
-                alert("Checkout will be available soon!")
-              }
-            >
-              PROCEED TO CHECKOUT
+            <button className="checkout-button">
+              <Link href="/checkout">
+                PROCEED TO CHECKOUT
+              </Link>
             </button>
 
             <Link href="/shop" className="back-to-shop">
