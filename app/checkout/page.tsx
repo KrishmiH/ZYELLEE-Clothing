@@ -5,15 +5,82 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 
 export default function CheckoutPage() {
-  const { cartItems, cartTotal, cartCount } = useCart();
+  const { cartItems, cartTotal, cartCount, clearCart } = useCart();
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
 
-  const handlePlaceOrder = (event: React.FormEvent<HTMLFormElement>) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [orderNumber, setOrderNumber] = useState("");
+
+  const handlePlaceOrder = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
-    alert("Your checkout details have been submitted! Order processing will be implemented next.");
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      const formData = new FormData(event.currentTarget);
+
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          firstName: formData.get("firstName"),
+          lastName: formData.get("lastName"),
+          phone: formData.get("phone"),
+          address: formData.get("address"),
+          address2: formData.get("address2"),
+          city: formData.get("city"),
+          postalCode: formData.get("postalCode"),
+          paymentMethod,
+          items: cartItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            size: item.size,
+            color: item.color,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Unable to place your order.");
+      }
+
+      setOrderNumber(data.order.orderNumber);
+      clearCart();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (orderNumber) {
+    return (
+      <main className="checkout-page">
+        <div className="checkout-empty">
+          <h1>Thank You for Your Order!</h1>
+          <p>Your order has been successfully placed.</p>
+          <p>
+            Your order number is: <strong>{orderNumber}</strong>
+          </p>
+          <Link href="/shop">CONTINUE SHOPPING</Link>
+        </div>
+      </main>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -49,6 +116,7 @@ export default function CheckoutPage() {
                 <label htmlFor="email">Email Address</label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="example@email.com"
                   required
@@ -59,6 +127,7 @@ export default function CheckoutPage() {
                 <label htmlFor="firstName">First Name</label>
                 <input
                   id="firstName"
+                  name="firstName"
                   type="text"
                   placeholder="First name"
                   required
@@ -69,6 +138,7 @@ export default function CheckoutPage() {
                 <label htmlFor="lastName">Last Name</label>
                 <input
                   id="lastName"
+                  name="lastName"
                   type="text"
                   placeholder="Last name"
                   required
@@ -79,6 +149,7 @@ export default function CheckoutPage() {
                 <label htmlFor="phone">Phone Number</label>
                 <input
                   id="phone"
+                  name="phone"
                   type="tel"
                   placeholder="07XXXXXXXX"
                   pattern="0[0-9]{9}"
@@ -97,6 +168,7 @@ export default function CheckoutPage() {
                 <label htmlFor="address">Street Address</label>
                 <input
                   id="address"
+                  name="address"
                   type="text"
                   placeholder="House number and street"
                   required
@@ -109,6 +181,7 @@ export default function CheckoutPage() {
                 </label>
                 <input
                   id="address2"
+                  name="address2"
                   type="text"
                   placeholder="Apartment, suite, etc."
                 />
@@ -118,6 +191,7 @@ export default function CheckoutPage() {
                 <label htmlFor="city">City</label>
                 <input
                   id="city"
+                  name="city"
                   type="text"
                   placeholder="City"
                   required
@@ -128,6 +202,7 @@ export default function CheckoutPage() {
                 <label htmlFor="postalCode">Postal Code</label>
                 <input
                   id="postalCode"
+                  name="postalCode"
                   type="text"
                   placeholder="Postal code"
                   required
@@ -174,8 +249,18 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <button type="submit" className="place-order-button">
-            PLACE ORDER
+          {errorMessage && (
+            <p style={{ color: "red", marginBottom: "15px", fontSize: "13px" }}>
+              {errorMessage}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="place-order-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "PLACING ORDER..." : "PLACE ORDER"}
           </button>
 
           <Link href="/cart" className="checkout-back-link">

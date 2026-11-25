@@ -32,6 +32,7 @@ type CartContextType = {
     color: string,
     quantity: number
   ) => void;
+  clearCart: () => void;
   cartCount: number;
   cartTotal: number;
 };
@@ -138,6 +139,10 @@ export function CartProvider({
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   // Total number of items
   const cartCount = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -157,6 +162,7 @@ export function CartProvider({
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
         cartCount,
         cartTotal,
       }}
