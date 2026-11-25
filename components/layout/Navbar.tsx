@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
+  const { cartCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
@@ -32,7 +34,7 @@ export default function Navbar() {
           </Link>
 
           <Link href="/cart" className="cart-link">
-            BAG (0)
+            BAG ({cartCount})
           </Link>
 
           <button

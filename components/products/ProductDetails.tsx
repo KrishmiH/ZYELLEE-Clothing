@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import type { Product } from "@/lib/products";
 
@@ -11,6 +12,8 @@ type ProductDetailsProps = {
 export default function ProductDetails({
   product,
 }: ProductDetailsProps) {
+  const { addToCart } = useCart();
+
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -21,9 +24,19 @@ export default function ProductDetails({
       return;
     }
 
-    alert(
-      `${quantity} x ${product.name} (${selectedSize}, ${selectedColor}) added to your bag!`
-    );
+    addToCart({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      size: selectedSize,
+      color: selectedColor,
+      quantity: quantity,
+    });
+
+    alert(`${product.name} added to your bag!`);
+
+    setQuantity(1);
   };
 
   return (
