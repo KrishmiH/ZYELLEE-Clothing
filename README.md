@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ZYELLEE – Clothing E-Commerce Website
+
+A modern, minimalist fashion e-commerce website for **ZYELLEE**, built with Next.js, TypeScript, and Tailwind CSS.
+
+## About the Project
+
+ZYELLEE is an online clothing store designed to provide customers with a simple, elegant, and convenient shopping experience.
+
+The website focuses on a clean visual identity, modern fashion presentation, and responsive user experience.
+
+## Features
+
+### Currently Implemented
+- Responsive homepage
+- Minimalist brand design
+- Navigation bar
+- Mobile hamburger navigation
+- Hero section
+- New arrivals section
+- Brand story section
+- Responsive footer
+
+### Planned Features
+- Product catalogue and categories
+- Product search and filtering
+- Product detail pages
+- Shopping cart functionality
+- Customer registration and login
+- Secure checkout and online payments
+- Order management
+- Admin dashboard
+- Product and inventory management
+
+## Technology Stack
+
+- **Frontend:** Next.js, React.js, TypeScript
+- **Styling:** Tailwind CSS, Custom CSS
+- **Development Tools:** VS Code, Git, GitHub
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the Repository
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+```
+
+### 2. Navigate to the Project
+
+```bash
+cd zyellee
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Start the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+zyellee/
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── globals.css
+│
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.tsx
+│   │   └── Footer.tsx
+│   │
+│   └── home/
+│       ├── Hero.tsx
+│       ├── NewArrivals.tsx
+│       └── BrandStory.tsx
+│
+├── public/
+│   ├── images/
+│   ├── products/
+│   └── logo/
+│
+└── package.json
+```
 
-## Learn More
+## Development Status
 
-To learn more about Next.js, take a look at the following resources:
+**Status:** In Development
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is actively being developed. Additional e-commerce features and backend functionality will be implemented progressively.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Brand
 
-## Deploy on Vercel
+**ZYELLEE**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Thoughtful everyday clothing made for effortless wear.
