@@ -495,3 +495,262 @@ a {
     border-bottom: none;
   }
 }
+
+
+/* SHOP PAGE */
+
+.shop-page {
+  min-height: 100vh;
+  background: var(--white);
+}
+
+.shop-banner {
+  background: var(--ivory);
+  padding: 85px 20px;
+  text-align: center;
+}
+
+.shop-banner p {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--mocha);
+  margin-bottom: 20px;
+}
+
+.shop-banner h1 {
+  font-family: Georgia, serif;
+  font-weight: normal;
+  font-size: clamp(42px, 5vw, 65px);
+  margin-bottom: 18px;
+}
+
+.shop-banner span {
+  font-size: 13px;
+  color: #77716a;
+}
+
+.shop-content {
+  padding: 60px 7% 100px;
+}
+
+.shop-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #eeeae5;
+  padding-bottom: 25px;
+}
+
+.category-filters {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.category-button {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+  padding-bottom: 7px;
+  transition: 0.3s;
+}
+
+.category-button:hover,
+.category-button.active {
+  color: var(--charcoal);
+}
+
+.category-button.active {
+  border-bottom: 1px solid var(--charcoal);
+}
+
+.shop-sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.shop-sort select {
+  padding: 10px;
+  border: 1px solid #e5e0d9;
+  background: white;
+  color: var(--charcoal);
+  outline: none;
+  cursor: pointer;
+}
+
+.shop-result {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #888;
+  margin: 30px 0;
+}
+
+.shop-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 24px;
+  width: 100%;
+  align-items: start;
+}
+
+.shop-product-card {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.shop-product-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  height: auto;
+  overflow: hidden;
+  background: var(--ivory);
+}
+
+.shop-product-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.shop-product-card:hover .shop-product-image img {
+  transform: scale(1.05);
+}
+
+.shop-new-tag {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: white;
+  padding: 8px 12px;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.shop-product-category {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #999;
+  margin-top: 17px;
+}
+
+.shop-product-card h3 {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  font-weight: normal;
+  margin-top: 8px;
+}
+
+.shop-product-price {
+  font-size: 12px;
+  color: #777;
+  margin-top: 10px;
+}
+
+.empty-products {
+  text-align: center;
+  padding: 80px 0;
+  color: #888;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .shop-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shop-product-image {
+    height: 380px;
+  }
+}
+
+@media (max-width: 600px) {
+  .shop-banner {
+    padding: 65px 15px;
+  }
+
+  .shop-content {
+    padding: 40px 5% 70px;
+  }
+
+  .shop-toolbar {
+    align-items: flex-start;
+  }
+
+  .category-filters {
+    gap: 18px;
+  }
+
+  .shop-sort {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .shop-product-grid {
+    gap: 28px 12px;
+  }
+
+  .shop-product-image {
+    height: 250px;
+  }
+
+  .shop-product-card h3 {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 380px) {
+  .shop-product-image {
+    height: 210px;
+  }
+}
+
+.shop-content {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 60px 7% 100px;
+}
+
+.shop-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.shop-product-card h3 {
+  line-height: 1.4;
+}
+
+.shop-product-price {
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .shop-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .shop-content {
+    padding: 40px 5% 70px;
+  }
+
+  .shop-product-grid {
+    gap: 30px 14px;
+  }
+}
