@@ -94,31 +94,51 @@ export default function ShopContent({
         </div>
 
         <div className="shop-product-grid">
-          {filteredProducts.map((product) => (
-            <Link
-              href={`/products/${product.id}`}
-              key={product.id}
-              className="shop-product-card"
-            >
-              <div className="shop-product-image">
-                <img src={product.image} alt={product.name} />
+          {filteredProducts.map((product) => {
+            const secondImage = product.images?.[1];
 
-                {product.isNew && (
-                  <span className="shop-new-tag">NEW</span>
-                )}
-              </div>
+            return (
+              <Link
+                href={`/products/${product.id}`}
+                key={product.id}
+                className="shop-product-card"
+              >
+                <div
+                  className={`shop-product-image ${
+                    secondImage ? "has-hover-image" : ""
+                  }`}
+                >
+                  <img
+                    className="shop-primary-image"
+                    src={product.image}
+                    alt={product.name}
+                  />
 
-              <p className="shop-product-category">
-                {product.category}
-              </p>
+                  {secondImage && secondImage !== product.image && (
+                    <img
+                      className="shop-secondary-image"
+                      src={secondImage}
+                      alt={`${product.name} alternate view`}
+                    />
+                  )}
 
-              <h3>{product.name}</h3>
+                  {product.isNew && (
+                    <span className="shop-new-tag">NEW</span>
+                  )}
+                </div>
 
-              <p className="shop-product-price">
-                LKR {product.price.toLocaleString("en-LK")}
-              </p>
-            </Link>
-          ))}
+                <p className="shop-product-category">
+                  {product.category}
+                </p>
+
+                <h3>{product.name}</h3>
+
+                <p className="shop-product-price">
+                  LKR {product.price.toLocaleString("en-LK")}
+                </p>
+              </Link>
+            );
+          })}
         </div>
 
         {filteredProducts.length === 0 && (

@@ -8,11 +8,24 @@ export default async function ShopPage() {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      images: {
+        orderBy: {
+          position: "asc",
+        },
+      },
+    },
   });
 
   const products = databaseProducts.map((product) => ({
     ...product,
     price: Number(product.price),
+    image:
+      product.images[0]?.url || product.image,
+    images:
+      product.images.length > 0
+        ? product.images.map((image) => image.url)
+        : [product.image],
   }));
 
   return <ShopContent products={products} />;
