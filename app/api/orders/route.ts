@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
-import { products } from "@/lib/products";
 
 export async function POST(request: Request) {
   try {
@@ -63,21 +62,54 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate products and calculate prices on the server
-    const orderItems = [];
+    // Validate cart item structure
+    const productIds: number[] = [];
 
     for (const item of items) {
-      const product = products.find(
-        (product) => product.id === Number(item.productId)
-      );
-
-      const quantity = Number(item.quantity);
+      const productId = Number(item?.productId);
+      const quantity = Number(item?.quantity);
 
       if (
-        !product ||
+        !Number.isSafeInteger(productId) ||
+        productId <= 0 ||
         !Number.isInteger(quantity) ||
         quantity < 1 ||
         quantity > 20 ||
+        typeof item?.size !== "string" ||
+        typeof item?.color !== "string"
+      ) {
+        return NextResponse.json(
+          { message: "One or more cart items are invalid." },
+          { status: 400 }
+        );
+      }
+
+      productIds.push(productId);
+    }
+
+    // Retrieve products from PostgreSQL
+    const databaseProducts = await prisma.product.findMany({
+      where: {
+        id: {
+          in: [...new Set(productIds)],
+        },
+      },
+    });
+
+    const productMap = new Map(
+      databaseProducts.map((product) => [product.id, product])
+    );
+
+    // Validate products and calculate prices using database values
+    const orderItems = [];
+
+    for (const item of items) {
+      const productId = Number(item.productId);
+      const quantity = Number(item.quantity);
+      const product = productMap.get(productId);
+
+      if (
+        !product ||
         !product.sizes.includes(item.size) ||
         !product.colors.includes(item.color)
       ) {
@@ -90,13 +122,14 @@ export async function POST(request: Request) {
       orderItems.push({
         productId: product.id,
         name: product.name,
-        price: product.price,
+        price: Number(product.price),
         quantity,
         size: item.size,
         color: item.color,
       });
     }
 
+    // Calculate order totals
     const subtotal = orderItems.reduce(
       (total, item) => total + item.price * item.quantity,
       0
