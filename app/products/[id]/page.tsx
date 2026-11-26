@@ -1,7 +1,8 @@
+
 export const instant = false;
 
 import { notFound } from "next/navigation";
-import { products } from "@/lib/products";
+import { prisma } from "@/lib/prisma";
 import ProductDetails from "@/components/products/ProductDetails";
 
 type ProductPageProps = {
@@ -15,13 +16,26 @@ export default async function ProductPage({
 }: ProductPageProps) {
   const { id } = await params;
 
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
+  const productId = Number(id);
 
-  if (!product) {
+  if (!Number.isSafeInteger(productId) || productId <= 0) {
     notFound();
   }
+
+  const databaseProduct = await prisma.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+
+  if (!databaseProduct) {
+    notFound();
+  }
+
+  const product = {
+    ...databaseProduct,
+    price: Number(databaseProduct.price),
+  };
 
   return <ProductDetails product={product} />;
 }
