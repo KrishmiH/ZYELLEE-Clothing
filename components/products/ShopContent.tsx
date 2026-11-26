@@ -12,15 +12,12 @@ export default function ShopContent({
 }) {
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("featured");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] =
     useState<Product | null>(null);
 
-  const categories = [
-    "All",
-    "Tops",
-    "Dresses",
-    "Bottoms",
-  ];
+  const categories = ["All", "Tops", "Dresses", "Bottoms"];
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -28,6 +25,16 @@ export default function ShopContent({
     if (category !== "All") {
       result = result.filter(
         (product) => product.category === category
+      );
+    }
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+
+      result = result.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
       );
     }
 
@@ -46,7 +53,12 @@ export default function ShopContent({
     }
 
     return result;
-  }, [category, sort]);
+  }, [category, sort, searchQuery]);
+
+  function closeSearch() {
+    setSearchOpen(false);
+    setSearchQuery("");
+  }
 
   return (
     <main className="shop-page">
@@ -76,19 +88,66 @@ export default function ShopContent({
             ))}
           </div>
 
-          <div className="shop-sort">
-            <span>Sort by:</span>
-
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              aria-label="Sort products"
+          <div className="shop-toolbar-actions">
+            <div
+              className={`shop-search-toggle ${
+                searchOpen ? "search-expanded" : ""
+              }`}
             >
-              <option value="featured">Featured</option>
-              <option value="newest">New Arrivals</option>
-              <option value="low">Price: Low to High</option>
-              <option value="high">Price: High to Low</option>
-            </select>
+              {searchOpen && (
+                <input
+                  type="search"
+                  placeholder="Search collection..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label="Search products"
+                  autoFocus
+                />
+              )}
+
+              <button
+                type="button"
+                className="shop-search-icon"
+                onClick={() =>
+                  searchOpen ? closeSearch() : setSearchOpen(true)
+                }
+                aria-label={searchOpen ? "Close search" : "Open search"}
+              >
+                {searchOpen ? (
+                  <span className="shop-search-close">×</span>
+                ) : (
+                  <svg
+                    width="19"
+                    height="19"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-4-4" />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            <div className="shop-sort">
+              <span>Sort by:</span>
+
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                aria-label="Sort products"
+              >
+                <option value="featured">Featured</option>
+                <option value="newest">New Arrivals</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -158,7 +217,7 @@ export default function ShopContent({
 
         {filteredProducts.length === 0 && (
           <p className="empty-products">
-            No products found in this category.
+            No products found. Try another search.
           </p>
         )}
       </section>
