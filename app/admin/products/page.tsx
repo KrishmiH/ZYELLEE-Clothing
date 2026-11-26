@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/admin-session";
 import { prisma } from "@/lib/prisma";
+import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
 export const instant = false;
 
@@ -68,7 +69,7 @@ export default async function AdminProductsPage() {
                   <th>Sizes</th>
                   <th>Colours</th>
                   <th>Collection</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
@@ -109,12 +110,19 @@ export default async function AdminProductsPage() {
                     </td>
 
                     <td>
-                      <Link
-                        href={`/admin/products/${product.id}/edit`}
-                        className="admin-order-link"
-                      >
-                        Edit
-                      </Link>
+                      <div className="admin-product-actions">
+                        <Link
+                          href={`/admin/products/${product.id}/edit`}
+                          className="admin-order-link"
+                        >
+                          Edit
+                        </Link>
+
+                        <DeleteProductButton
+                          productId={product.id}
+                          productName={product.name}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}

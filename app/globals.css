@@ -2861,3 +2861,56 @@ a {
 .shop-new-tag {
   z-index: 3;
 }
+
+
+/* Admin product image ordering */
+
+.admin-image-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+}
+
+.admin-image-actions button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+.admin-image-actions button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+
+/* Admin product actions */
+
+.admin-product-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-delete-product-button {
+  border: 1px solid #c75b5b;
+  background: transparent;
+  color: #b44343;
+  padding: 8px 13px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-delete-product-button:hover {
+  background: #b44343;
+  color: white;
+}
+
+.admin-delete-product-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

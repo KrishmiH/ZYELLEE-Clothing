@@ -1,7 +1,32 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+type ProductImage = {
+  url: string;
+  publicId: string | null;
+  file?: File;
+};
+
+type ProductData = {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  description: string;
+  images: {
+    url: string;
+    publicId: string | null;
+  }[];
+  sizes: string[];
+  colors: string[];
+  isNew: boolean;
+};
+
+type ProductFormProps = {
+  product?: ProductData;
+};
 
 type UploadedImage = {
   url: string;
@@ -18,42 +43,57 @@ const ALLOWED_TYPES = [
   "image/avif",
 ];
 
-export default function ProductForm() {
+export default function ProductForm({
+  product,
+}: ProductFormProps) {
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("Tops");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
-  const [sizes, setSizes] = useState("S, M, L, XL");
-  const [colors, setColors] = useState("");
-  const [isNew, setIsNew] = useState(false);
+  const [name, setName] = useState(product?.name || "");
+  const [category, setCategory] = useState(
+    product?.category || "Tops"
+  );
+  const [price, setPrice] = useState(
+    product ? String(product.price) : ""
+  );
+  const [description, setDescription] = useState(
+    product?.description || ""
+  );
+
+  const [images, setImages] = useState<ProductImage[]>(
+    product?.images.map((image) => ({ ...image })) || []
+  );
+
+  const [sizes, setSizes] = useState(
+    product?.sizes.join(", ") || "S, M, L, XL"
+  );
+
+  const [colors, setColors] = useState(
+    product?.colors.join(", ") || ""
+  );
+
+  const [isNew, setIsNew] = useState(product?.isNew || false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const previews = useMemo(
-    () =>
-      files.map((file) => ({
-        file,
-        url: URL.createObjectURL(file),
-      })),
-    [files]
-  );
-
   useEffect(() => {
     return () => {
-      previews.forEach((preview) => URL.revokeObjectURL(preview.url));
+      images.forEach((image) => {
+        if (image.file) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
     };
-  }, [previews]);
+  }, [images]);
 
   function handleFileChange(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const selectedFiles = Array.from(event.target.files || []);
+    const selectedFiles = Array.from(
+      event.target.files || []
+    );
 
-    if (files.length + selectedFiles.length > MAX_IMAGES) {
+    if (images.length + selectedFiles.length > MAX_IMAGES) {
       setError("You can upload a maximum of 5 images.");
       event.target.value = "";
       return;
@@ -61,27 +101,65 @@ export default function ProductForm() {
 
     for (const file of selectedFiles) {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        setError("Only JPG, PNG, WEBP and AVIF images are allowed.");
+        setError(
+          "Only JPG, PNG, WEBP and AVIF images are allowed."
+        );
         event.target.value = "";
         return;
       }
 
       if (file.size === 0 || file.size > MAX_FILE_SIZE) {
-        setError("Each image must be smaller than 5 MB.");
+        setError(
+          "Each image must be smaller than 5 MB."
+        );
         event.target.value = "";
         return;
       }
     }
 
+    const newImages = selectedFiles.map((file) => ({
+      url: URL.createObjectURL(file),
+      publicId: null,
+      file,
+    }));
+
     setError("");
-    setFiles((previous) => [...previous, ...selectedFiles]);
+    setImages((previous) => [...previous, ...newImages]);
+
     event.target.value = "";
   }
 
   function removeImage(index: number) {
-    setFiles((previous) =>
-      previous.filter((_, imageIndex) => imageIndex !== index)
-    );
+    setImages((previous) => {
+      const image = previous[index];
+
+      if (image?.file) {
+        URL.revokeObjectURL(image.url);
+      }
+
+      return previous.filter(
+        (_, imageIndex) => imageIndex !== index
+      );
+    });
+  }
+
+  function moveImage(index: number, direction: number) {
+    const newIndex = index + direction;
+
+    if (newIndex < 0 || newIndex >= images.length) {
+      return;
+    }
+
+    setImages((previous) => {
+      const updated = [...previous];
+
+      [updated[index], updated[newIndex]] = [
+        updated[newIndex],
+        updated[index],
+      ];
+
+      return updated;
+    });
   }
 
   async function handleSubmit(
@@ -90,60 +168,101 @@ export default function ProductForm() {
     event.preventDefault();
     setError("");
 
-    if (files.length === 0) {
-      setError("Please upload at least one product image.");
+    if (images.length === 0) {
+      setError("Please keep or upload at least one product image.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // First upload the selected images to Cloudinary.
-      const formData = new FormData();
-
-      files.forEach((file) => {
-        formData.append("images", file);
-      });
-
-      const uploadResponse = await fetch(
-        "/api/admin/products/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
+      // Upload only newly selected images.
+      const newFiles = images.filter(
+        (image) => image.file
       );
 
-      const uploadData = await uploadResponse.json();
+      let uploadedImages: UploadedImage[] = [];
 
-      if (!uploadResponse.ok) {
-        setError(uploadData.message || "Image upload failed.");
-        return;
+      if (newFiles.length > 0) {
+        const formData = new FormData();
+
+        newFiles.forEach((image) => {
+          formData.append("images", image.file!);
+        });
+
+        const uploadResponse = await fetch(
+          "/api/admin/products/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const uploadData = await uploadResponse.json();
+
+        if (!uploadResponse.ok) {
+          setError(
+            uploadData.message || "Image upload failed."
+          );
+          return;
+        }
+
+        uploadedImages = uploadData.images;
       }
 
-      const uploadedImages: UploadedImage[] = uploadData.images;
+      // Preserve the order of existing and newly uploaded images.
+      let uploadIndex = 0;
 
-      // Then save the product and its image records.
-      const response = await fetch("/api/admin/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          category,
-          price: Number(price),
-          description,
-          images: uploadedImages,
-          sizes: sizes.split(",").map((item) => item.trim()).filter(Boolean),
-          colors: colors.split(",").map((item) => item.trim()).filter(Boolean),
-          isNew,
-        }),
+      const finalImages = images.map((image) => {
+        if (image.file) {
+          return uploadedImages[uploadIndex++];
+        }
+
+        return {
+          url: image.url,
+          publicId: image.publicId,
+        };
       });
+
+      const productData = {
+        name,
+        category,
+        price: Number(price),
+        description,
+        images: finalImages,
+        sizes: sizes
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
+        colors: colors
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
+        isNew,
+      };
+
+      const response = await fetch(
+        product
+          ? `/api/admin/products/${product.id}`
+          : "/api/admin/products",
+        {
+          method: product ? "PATCH" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productData),
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Unable to add product.");
+        setError(
+          data.message ||
+            (product
+              ? "Unable to update product."
+              : "Unable to add product.")
+        );
         return;
       }
 
@@ -156,8 +275,13 @@ export default function ProductForm() {
     }
   }
 
+  const isEditing = Boolean(product);
+
   return (
-    <form className="admin-product-form" onSubmit={handleSubmit}>
+    <form
+      className="admin-product-form"
+      onSubmit={handleSubmit}
+    >
       <div className="admin-form-section">
         <h2>Product Information</h2>
         <p>Enter the basic details of your clothing item.</p>
@@ -204,7 +328,9 @@ export default function ProductForm() {
         </div>
 
         <div className="admin-form-group">
-          <label htmlFor="product-description">Description</label>
+          <label htmlFor="product-description">
+            Description
+          </label>
           <textarea
             id="product-description"
             value={description}
@@ -218,13 +344,20 @@ export default function ProductForm() {
 
       <div className="admin-form-section">
         <h2>Product Photos</h2>
-        <p>Upload up to 5 photos from your computer.</p>
+        <p>
+          Keep, remove, reorder or upload up to 5 product photos.
+        </p>
 
-        <label className="admin-image-upload-area" htmlFor="product-images">
+        <label
+          className="admin-image-upload-area"
+          htmlFor="product-images"
+        >
           <span className="admin-image-upload-icon">+</span>
           <strong>Choose product photos</strong>
           <span>Click to browse files from your computer</span>
-          <small>JPG, PNG, WEBP or AVIF · Maximum 5 MB per image</small>
+          <small>
+            JPG, PNG, WEBP or AVIF · Maximum 5 MB per image
+          </small>
         </label>
 
         <input
@@ -234,14 +367,20 @@ export default function ProductForm() {
           accept="image/jpeg,image/png,image/webp,image/avif"
           multiple
           onChange={handleFileChange}
-          disabled={files.length >= MAX_IMAGES || loading}
+          disabled={images.length >= MAX_IMAGES || loading}
         />
 
-        {previews.length > 0 && (
+        {images.length > 0 && (
           <div className="admin-image-preview-grid">
-            {previews.map((preview, index) => (
-              <div className="admin-image-preview" key={`${preview.file.name}-${index}`}>
-                <img src={preview.url} alt={`Product preview ${index + 1}`} />
+            {images.map((image, index) => (
+              <div
+                className="admin-image-preview"
+                key={`${image.url}-${index}`}
+              >
+                <img
+                  src={image.url}
+                  alt={`Product image ${index + 1}`}
+                />
 
                 {index === 0 && (
                   <span className="admin-primary-image-label">
@@ -249,22 +388,44 @@ export default function ProductForm() {
                   </span>
                 )}
 
-                <button
-                  type="button"
-                  className="admin-remove-image"
-                  onClick={() => removeImage(index)}
-                  disabled={loading}
-                  aria-label={`Remove image ${index + 1}`}
-                >
-                  ×
-                </button>
+                <div className="admin-image-actions">
+                  <button
+                    type="button"
+                    onClick={() => moveImage(index, -1)}
+                    disabled={index === 0 || loading}
+                    aria-label="Move image left"
+                  >
+                    ←
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => moveImage(index, 1)}
+                    disabled={
+                      index === images.length - 1 || loading
+                    }
+                    aria-label="Move image right"
+                  >
+                    →
+                  </button>
+
+                  <button
+                    type="button"
+                    className="admin-remove-image"
+                    onClick={() => removeImage(index)}
+                    disabled={loading}
+                    aria-label={`Remove image ${index + 1}`}
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
 
         <small className="admin-image-count">
-          {files.length} of {MAX_IMAGES} images selected
+          {images.length} of {MAX_IMAGES} images selected
         </small>
       </div>
 
@@ -274,7 +435,9 @@ export default function ProductForm() {
 
         <div className="admin-form-row">
           <div className="admin-form-group">
-            <label htmlFor="product-sizes">Available Sizes</label>
+            <label htmlFor="product-sizes">
+              Available Sizes
+            </label>
             <input
               id="product-sizes"
               type="text"
@@ -287,7 +450,9 @@ export default function ProductForm() {
           </div>
 
           <div className="admin-form-group">
-            <label htmlFor="product-colors">Available Colours</label>
+            <label htmlFor="product-colors">
+              Available Colours
+            </label>
             <input
               id="product-colors"
               type="text"
@@ -310,7 +475,9 @@ export default function ProductForm() {
         </label>
       </div>
 
-      {error && <p className="admin-form-error">{error}</p>}
+      {error && (
+        <p className="admin-form-error">{error}</p>
+      )}
 
       <div className="admin-form-actions">
         <button
@@ -327,7 +494,11 @@ export default function ProductForm() {
           className="admin-form-submit"
           disabled={loading}
         >
-          {loading ? "UPLOADING AND SAVING..." : "ADD PRODUCT"}
+          {loading
+            ? "PLEASE WAIT..."
+            : isEditing
+              ? "SAVE CHANGES"
+              : "ADD PRODUCT"}
         </button>
       </div>
     </form>
