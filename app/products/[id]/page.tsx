@@ -1,4 +1,3 @@
-
 export const instant = false;
 
 import { notFound } from "next/navigation";
@@ -26,6 +25,13 @@ export default async function ProductPage({
     where: {
       id: productId,
     },
+    include: {
+      images: {
+        orderBy: {
+          position: "asc",
+        },
+      },
+    },
   });
 
   if (!databaseProduct) {
@@ -35,6 +41,12 @@ export default async function ProductPage({
   const product = {
     ...databaseProduct,
     price: Number(databaseProduct.price),
+    image:
+      databaseProduct.images[0]?.url || databaseProduct.image,
+    images:
+      databaseProduct.images.length > 0
+        ? databaseProduct.images.map((image) => image.url)
+        : [databaseProduct.image],
   };
 
   return <ProductDetails product={product} />;

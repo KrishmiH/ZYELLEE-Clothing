@@ -17,6 +17,12 @@ export default function ProductDetails({
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
+
+  const productImages =
+    product.images.length > 0
+      ? product.images
+      : [product.image];
 
   const handleAddToBag = () => {
     if (!selectedSize || !selectedColor) {
@@ -28,10 +34,10 @@ export default function ProductDetails({
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: productImages[0],
       size: selectedSize,
       color: selectedColor,
-      quantity: quantity,
+      quantity,
     });
 
     alert(`${product.name} added to your bag!`);
@@ -50,8 +56,35 @@ export default function ProductDetails({
       </div>
 
       <section className="product-details-container">
-        <div className="product-details-image">
-          <img src={product.image} alt={product.name} />
+        <div className="product-gallery">
+          <div className="product-details-image">
+            <img
+              src={productImages[activeImage]}
+              alt={product.name}
+            />
+          </div>
+
+          {productImages.length > 1 && (
+            <div className="product-image-thumbnails">
+              {productImages.map((image, index) => (
+                <button
+                  key={`${image}-${index}`}
+                  type="button"
+                  className={`product-image-thumbnail ${
+                    activeImage === index ? "active" : ""
+                  }`}
+                  onClick={() => setActiveImage(index)}
+                  aria-label={`View product image ${index + 1}`}
+                  aria-pressed={activeImage === index}
+                >
+                  <img
+                    src={image}
+                    alt={`${product.name} view ${index + 1}`}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="product-details-info">

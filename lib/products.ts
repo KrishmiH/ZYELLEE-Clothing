@@ -5,6 +5,7 @@ export type Product = {
   price: number;
   description: string;
   image: string;
+  images: string[];
   sizes: string[];
   colors: string[];
   isNew: boolean;
@@ -20,6 +21,7 @@ export const products: Product[] = [
       "A timeless everyday blouse designed for effortless styling and comfort.",
     image:
       "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700",
+    images: [],
     sizes: ["S", "M", "L", "XL"],
     colors: ["Beige", "White"],
     isNew: true,
@@ -33,6 +35,7 @@ export const products: Product[] = [
       "An elegant dress for everyday occasions and special moments.",
     image:
       "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=700",
+    images: [],
     sizes: ["S", "M", "L"],
     colors: ["Black", "Brown"],
     isNew: true,
@@ -46,6 +49,7 @@ export const products: Product[] = [
       "A versatile piece that complements your everyday wardrobe.",
     image:
       "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=700",
+    images: [],
     sizes: ["S", "M", "L", "XL"],
     colors: ["White", "Cream"],
     isNew: false,
@@ -59,6 +63,7 @@ export const products: Product[] = [
       "A modern fashion piece designed with simplicity in mind.",
     image:
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=700",
+    images: [],
     sizes: ["S", "M", "L"],
     colors: ["Beige", "Black"],
     isNew: true,
@@ -72,6 +77,7 @@ export const products: Product[] = [
       "Comfortable trousers for a relaxed and polished look.",
     image:
       "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=700",
+    images: [],
     sizes: ["S", "M", "L", "XL"],
     colors: ["Black", "Beige"],
     isNew: false,
@@ -85,6 +91,7 @@ export const products: Product[] = [
       "An effortless addition to your casual wardrobe.",
     image:
       "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700",
+    images: [],
     sizes: ["S", "M", "L"],
     colors: ["White", "Brown"],
     isNew: false,
@@ -98,6 +105,7 @@ export const products: Product[] = [
       "A refined style for women who appreciate simple elegance.",
     image:
       "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700",
+    images: [],
     sizes: ["S", "M", "L"],
     colors: ["Black", "Cream"],
     isNew: true,
@@ -111,6 +119,7 @@ export const products: Product[] = [
       "A versatile everyday essential with a timeless look.",
     image:
       "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=700",
+    images: [],
     sizes: ["S", "M", "L", "XL"],
     colors: ["Brown", "Black"],
     isNew: false,
