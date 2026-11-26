@@ -2914,3 +2914,259 @@ a {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+
+/* Shop Quick View Button */
+
+.shop-product-card {
+  position: relative;
+}
+
+.shop-product-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.shop-quick-view-button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--charcoal);
+  background: transparent;
+  color: var(--charcoal);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.shop-quick-view-button:hover {
+  background: var(--charcoal);
+  color: var(--white);
+}
+
+/* Quick View Popup */
+
+.quick-view-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.quick-view-modal {
+  position: relative;
+  width: 100%;
+  max-width: 950px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--ivory);
+  padding: 35px;
+}
+
+.quick-view-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  z-index: 2;
+  border: none;
+  background: transparent;
+  color: var(--charcoal);
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.quick-view-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+}
+
+.quick-view-main-image {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--beige);
+}
+
+.quick-view-main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quick-view-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.quick-view-thumbnail {
+  flex: 0 0 65px;
+  height: 80px;
+  padding: 0;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+}
+
+.quick-view-thumbnail.active {
+  border-color: var(--charcoal);
+}
+
+.quick-view-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quick-view-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 25px 0;
+}
+
+.quick-view-category {
+  color: #8b8175;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.quick-view-details h2 {
+  margin: 12px 0;
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: normal;
+}
+
+.quick-view-price {
+  font-size: 17px;
+  margin-bottom: 20px;
+}
+
+.quick-view-description {
+  color: #77716a;
+  font-size: 13px;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+.quick-view-option {
+  width: 100%;
+  margin-bottom: 22px;
+}
+
+.quick-view-option label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+}
+
+.quick-view-size-options,
+.quick-view-color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.quick-view-size,
+.quick-view-color {
+  min-width: 42px;
+  padding: 10px 13px;
+  border: 1px solid #d5cec4;
+  background: transparent;
+  color: var(--charcoal);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.quick-view-size.active,
+.quick-view-color.active {
+  background: var(--charcoal);
+  color: white;
+  border-color: var(--charcoal);
+}
+
+.quick-view-quantity {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d5cec4;
+  width: fit-content;
+}
+
+.quick-view-quantity button {
+  width: 38px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.quick-view-quantity span {
+  min-width: 35px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.quick-view-add-button {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--charcoal);
+  background: var(--charcoal);
+  color: white;
+  font-size: 11px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.quick-view-add-button:hover {
+  background: transparent;
+  color: var(--charcoal);
+}
+
+.quick-view-full-details {
+  margin-top: 20px;
+  color: var(--charcoal);
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--charcoal);
+  padding-bottom: 5px;
+}
+
+/* Responsive Quick View */
+
+@media (max-width: 700px) {
+  .quick-view-overlay {
+    padding: 12px;
+  }
+
+  .quick-view-modal {
+    padding: 25px 18px;
+    max-height: 94vh;
+  }
+
+  .quick-view-content {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .quick-view-details {
+    padding: 10px 0;
+  }
+
+  .quick-view-details h2 {
+    font-size: 25px;
+  }
+}

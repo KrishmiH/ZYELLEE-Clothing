@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Product } from "@/lib/products";
+import QuickView from "@/components/products/QuickView";
 
 export default function ShopContent({
   products,
@@ -11,6 +12,8 @@ export default function ShopContent({
 }) {
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("featured");
+  const [quickViewProduct, setQuickViewProduct] =
+    useState<Product | null>(null);
 
   const categories = [
     "All",
@@ -98,45 +101,57 @@ export default function ShopContent({
             const secondImage = product.images?.[1];
 
             return (
-              <Link
-                href={`/products/${product.id}`}
+              <div
                 key={product.id}
                 className="shop-product-card"
               >
-                <div
-                  className={`shop-product-image ${
-                    secondImage ? "has-hover-image" : ""
-                  }`}
+                <Link
+                  href={`/products/${product.id}`}
+                  className="shop-product-link"
                 >
-                  <img
-                    className="shop-primary-image"
-                    src={product.image}
-                    alt={product.name}
-                  />
-
-                  {secondImage && secondImage !== product.image && (
+                  <div
+                    className={`shop-product-image ${
+                      secondImage ? "has-hover-image" : ""
+                    }`}
+                  >
                     <img
-                      className="shop-secondary-image"
-                      src={secondImage}
-                      alt={`${product.name} alternate view`}
+                      className="shop-primary-image"
+                      src={product.image}
+                      alt={product.name}
                     />
-                  )}
 
-                  {product.isNew && (
-                    <span className="shop-new-tag">NEW</span>
-                  )}
-                </div>
+                    {secondImage && secondImage !== product.image && (
+                      <img
+                        className="shop-secondary-image"
+                        src={secondImage}
+                        alt={`${product.name} alternate view`}
+                      />
+                    )}
 
-                <p className="shop-product-category">
-                  {product.category}
-                </p>
+                    {product.isNew && (
+                      <span className="shop-new-tag">NEW</span>
+                    )}
+                  </div>
 
-                <h3>{product.name}</h3>
+                  <p className="shop-product-category">
+                    {product.category}
+                  </p>
 
-                <p className="shop-product-price">
-                  LKR {product.price.toLocaleString("en-LK")}
-                </p>
-              </Link>
+                  <h3>{product.name}</h3>
+
+                  <p className="shop-product-price">
+                    LKR {product.price.toLocaleString("en-LK")}
+                  </p>
+                </Link>
+
+                <button
+                  type="button"
+                  className="shop-quick-view-button"
+                  onClick={() => setQuickViewProduct(product)}
+                >
+                  QUICK VIEW
+                </button>
+              </div>
             );
           })}
         </div>
@@ -147,6 +162,11 @@ export default function ShopContent({
           </p>
         )}
       </section>
+
+      <QuickView
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
     </main>
   );
 }
