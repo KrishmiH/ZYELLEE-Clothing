@@ -4,6 +4,7 @@ import { isAdminAuthenticated } from "@/lib/admin-session";
 import { prisma } from "@/lib/prisma";
 import OrderStatusForm from "@/components/admin/OrderStatusForm";
 import PaymentStatusForm from "@/components/admin/PaymentStatusForm";
+import CourierLabelPrint from "@/components/admin/CourierLabelPrint";
 
 export const instant = false;
 
@@ -60,6 +61,17 @@ export default async function OrderDetailsPage({
         <p className="admin-dashboard-description">
           Order #{order.orderNumber}
         </p>
+
+        <CourierLabelPrint
+          orderNumber={order.orderNumber}
+          firstName={order.firstName}
+          lastName={order.lastName}
+          phone={order.phone}
+          address={order.address}
+          address2={order.address2}
+          city={order.city}
+          postalCode={order.postalCode}
+        />
 
         <div className="admin-order-details-grid">
           <section className="admin-order-details-card">
