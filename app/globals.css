@@ -2007,6 +2007,43 @@ a {
   text-decoration: underline;
 }
 
+/* ORDER STATUS COLOURS */
+
+.admin-order-status.status-pending {
+  background: #fff4dc;
+  color: #98712c;
+}
+
+.admin-order-status.status-paid {
+  background: #e7f3e9;
+  color: #35734a;
+}
+
+.admin-order-status.status-rejected,
+.admin-order-status.status-cancelled {
+  background: #fbe9e7;
+  color: #b33b32;
+}
+
+.admin-order-status.status-processing {
+  background: #eaf0f8;
+  color: #45658d;
+}
+
+.admin-order-status.status-shipped {
+  background: #eee9f7;
+  color: #725a9b;
+}
+
+.admin-order-status.status-delivered {
+  background: #e7f3e9;
+  color: #35734a;
+}
+
+.admin-order-status.status-unpaid {
+  background: #f3eee7;
+  color: #78664f;
+}
 
 /* ADMIN ORDER DETAILS */
 
@@ -2194,6 +2231,48 @@ a {
   }
 }
 
+/* ADMIN PAYMENT VERIFICATION */
+
+.admin-order-status-section + .admin-order-status-section {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--beige);
+}
+
+.admin-order-status-section > a {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+}
+
+.admin-order-status-section > p {
+  margin: 0 0 15px;
+  color: #888078;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* Payment verification buttons */
+
+.admin-status-controls button:hover:not(:disabled) {
+  background: var(--mocha);
+  border-color: var(--mocha);
+  color: var(--white);
+  transition: 0.2s ease;
+}
+
+.admin-status-controls button:nth-child(2) {
+  background: var(--white);
+  border-color: #b33b32;
+  color: #b33b32;
+}
+
+.admin-status-controls button:nth-child(2):hover:not(:disabled) {
+  background: #b33b32;
+  border-color: #b33b32;
+  color: var(--white);
+}
 
 /* ORDER STATUS COLORS */
 
