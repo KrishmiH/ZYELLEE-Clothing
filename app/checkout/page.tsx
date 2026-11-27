@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { bankDetails } from "@/lib/bank-details";
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, cartCount, clearCart } = useCart();
@@ -13,10 +14,69 @@ export default function CheckoutPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [orderNumber, setOrderNumber] = useState("");
 
+  const [orderTotal, setOrderTotal] = useState(0);
+  const [customerEmail, setCustomerEmail] = useState("");
+
+  const [selectedReceipt, setSelectedReceipt] = useState<File | null>(null);
+
+  const [receiptUploading, setReceiptUploading] = useState(false);
+  const [receiptMessage, setReceiptMessage] = useState("");
+  const [receiptError, setReceiptError] = useState("");
+
+  const uploadReceipt = async (
+    file: File,
+    targetOrderNumber: string,
+    targetEmail: string
+  ) => {
+    setReceiptUploading(true);
+    setReceiptMessage("");
+    setReceiptError("");
+
+    try {
+      const formData = new FormData();
+
+      formData.append("receipt", file);
+      formData.append("orderNumber", targetOrderNumber);
+      formData.append("email", targetEmail);
+
+      const response = await fetch("/api/orders/receipt", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Receipt upload failed.");
+      }
+
+      setReceiptMessage("Payment receipt uploaded successfully!");
+      setReceiptError("");
+      setSelectedReceipt(null);
+
+      return true;
+    } catch (error) {
+      setReceiptError(
+        error instanceof Error
+          ? error.message
+          : "Unable to upload receipt."
+      );
+
+      return false;
+    } finally {
+      setReceiptUploading(false);
+    }
+  };
+
   const handlePlaceOrder = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+
+    if (paymentMethod === "bank" && !selectedReceipt) {
+      setErrorMessage("Please select your bank payment receipt.");
+      return;
+    }
 
     setIsSubmitting(true);
     setErrorMessage("");
@@ -24,13 +84,15 @@ export default function CheckoutPage() {
     try {
       const formData = new FormData(event.currentTarget);
 
+      const email = String(formData.get("email"));
+
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: formData.get("email"),
+          email,
           firstName: formData.get("firstName"),
           lastName: formData.get("lastName"),
           phone: formData.get("phone"),
@@ -54,8 +116,21 @@ export default function CheckoutPage() {
         throw new Error(data.message || "Unable to place your order.");
       }
 
-      setOrderNumber(data.order.orderNumber);
+      const newOrderNumber = data.order.orderNumber;
+
+      setOrderNumber(newOrderNumber);
+      setOrderTotal(data.order.total);
+      setCustomerEmail(email);
+
       clearCart();
+
+      if (paymentMethod === "bank" && selectedReceipt) {
+        await uploadReceipt(
+          selectedReceipt,
+          newOrderNumber,
+          email
+        );
+      }
     } catch (error) {
       setErrorMessage(
         error instanceof Error
@@ -67,15 +142,152 @@ export default function CheckoutPage() {
     }
   };
 
+  const handleReceiptRetry = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    const formElement = event.currentTarget;
+    const formData = new FormData(formElement);
+    const file = formData.get("receipt");
+
+    if (!(file instanceof File) || file.size === 0) {
+      setReceiptError("Please select a receipt.");
+      return;
+    }
+
+    const success = await uploadReceipt(
+      file,
+      orderNumber,
+      customerEmail
+    );
+
+    if (success) {
+      formElement.reset();
+    }
+  };
+
+  const handleReceiptUpload = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    const formElement = event.currentTarget;
+
+    setReceiptUploading(true);
+    setReceiptMessage("");
+    setReceiptError("");
+
+    try {
+      const formData = new FormData(event.currentTarget);
+
+      formData.append("orderNumber", orderNumber);
+      formData.append("email", customerEmail);
+
+      const response = await fetch("/api/orders/receipt", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Receipt upload failed.");
+      }
+
+      setReceiptMessage("Your payment receipt has been uploaded successfully!");
+      formElement.reset();
+    } catch (error) {
+      setReceiptError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setReceiptUploading(false);
+    }
+  };
+
   if (orderNumber) {
     return (
       <main className="checkout-page">
         <div className="checkout-empty">
           <h1>Thank You for Your Order!</h1>
+
           <p>Your order has been successfully placed.</p>
+
           <p>
             Your order number is: <strong>{orderNumber}</strong>
           </p>
+
+         {paymentMethod === "bank" && (
+          <div className="checkout-bank-details">
+            <div className="checkout-bank-heading">
+              <h3>Bank Transfer Details</h3>
+              <p>Your order has been received. Here are your payment details.</p>
+            </div>
+
+            <div className="checkout-bank-information">
+              <div>
+                <span>Bank Name</span>
+                <strong>{bankDetails.bankName}</strong>
+              </div>
+
+              <div>
+                <span>Account Name</span>
+                <strong>{bankDetails.accountName}</strong>
+              </div>
+
+              <div>
+                <span>Account Number</span>
+                <strong>{bankDetails.accountNumber}</strong>
+              </div>
+
+              <div>
+                <span>Branch</span>
+                <strong>{bankDetails.branch}</strong>
+              </div>
+
+              <div className="checkout-bank-amount">
+                <span>Amount Transferred</span>
+                <strong>
+                  LKR {orderTotal.toLocaleString("en-LK")}
+                </strong>
+              </div>
+            </div>
+
+            {receiptMessage && (
+              <p className="checkout-receipt-success">
+                {receiptMessage}
+              </p>
+            )}
+
+            {receiptError && (
+              <div className="checkout-receipt-upload">
+                <p className="checkout-receipt-error">{receiptError}</p>
+
+                <form onSubmit={handleReceiptRetry}>
+                  <label htmlFor="retry-receipt">
+                    Upload Payment Receipt Again
+                  </label>
+
+                  <input
+                    id="retry-receipt"
+                    name="receipt"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,application/pdf"
+                    required
+                  />
+
+                  <button type="submit" disabled={receiptUploading}>
+                    {receiptUploading ? "UPLOADING..." : "UPLOAD RECEIPT"}
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+        )}
+
           <Link href="/shop">CONTINUE SHOPPING</Link>
         </div>
       </main>
@@ -221,10 +433,13 @@ export default function CheckoutPage() {
                   name="payment"
                   value="cod"
                   checked={paymentMethod === "cod"}
-                  onChange={(event) =>
-                    setPaymentMethod(event.target.value)
-                  }
+                  onChange={() => {
+                    setPaymentMethod("cod");
+                    setSelectedReceipt(null);
+                    setReceiptError("");
+                  }}
                 />
+
                 <span>
                   <strong>Cash on Delivery</strong>
                   <small>Pay when your order arrives</small>
@@ -237,16 +452,88 @@ export default function CheckoutPage() {
                   name="payment"
                   value="bank"
                   checked={paymentMethod === "bank"}
-                  onChange={(event) =>
-                    setPaymentMethod(event.target.value)
-                  }
+                  onChange={() => setPaymentMethod("bank")}
                 />
+
                 <span>
                   <strong>Bank Transfer</strong>
-                  <small>Bank transfer instructions will be provided later</small>
+                  <small>Pay directly to our bank account</small>
                 </span>
               </label>
             </div>
+
+            {paymentMethod === "bank" && (
+              <div className="checkout-bank-details">
+                <div className="checkout-bank-heading">
+                  <h3>Bank Transfer Details</h3>
+                  <p>
+                    Please transfer the total amount to the following bank account
+                    and upload your payment receipt.
+                  </p>
+                </div>
+
+                <div className="checkout-bank-information">
+                  <div>
+                    <span>Bank Name</span>
+                    <strong>{bankDetails.bankName}</strong>
+                  </div>
+
+                  <div>
+                    <span>Account Name</span>
+                    <strong>{bankDetails.accountName}</strong>
+                  </div>
+
+                  <div>
+                    <span>Account Number</span>
+                    <strong>{bankDetails.accountNumber}</strong>
+                  </div>
+
+                  <div>
+                    <span>Branch</span>
+                    <strong>{bankDetails.branch}</strong>
+                  </div>
+
+                  <div className="checkout-bank-amount">
+                    <span>Amount to Transfer</span>
+                    <strong>
+                      LKR {cartTotal.toLocaleString("en-LK")}
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="checkout-receipt-upload">
+                  <label htmlFor="payment-receipt">
+                    Upload Payment Receipt
+                  </label>
+
+                  <p>
+                    Select your bank transfer receipt before placing your order.
+                  </p>
+
+                  <input
+                    id="payment-receipt"
+                    name="receipt"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,application/pdf"
+                    required
+                    onChange={(event) => {
+                      setSelectedReceipt(event.target.files?.[0] || null);
+                      setErrorMessage("");
+                    }}
+                  />
+
+                  {selectedReceipt && (
+                    <p className="checkout-receipt-selected">
+                      Selected: {selectedReceipt.name}
+                    </p>
+                  )}
+
+                  <small>
+                    Accepted formats: JPG, PNG, WEBP and PDF. Maximum size: 5 MB.
+                  </small>
+                </div>
+              </div>
+            )}
           </div>
 
           {errorMessage && (

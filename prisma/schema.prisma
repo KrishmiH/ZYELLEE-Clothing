@@ -20,6 +20,8 @@ model Order {
   postalCode      String
   paymentMethod   String
   status          String      @default("PENDING")
+  paymentStatus   String      @default("PENDING")
+  paymentReceipt  String?
   subtotal        Decimal     @db.Decimal(10, 2)
   shippingCost    Decimal     @default(0) @db.Decimal(10, 2)
   total            Decimal     @db.Decimal(10, 2)

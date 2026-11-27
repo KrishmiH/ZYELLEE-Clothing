@@ -154,6 +154,7 @@ export async function POST(request: Request) {
         city: city.trim(),
         postalCode: postalCode.trim(),
         paymentMethod,
+        paymentStatus: paymentMethod === "bank" ? "PENDING" : "UNPAID",
         subtotal,
         shippingCost,
         total,
