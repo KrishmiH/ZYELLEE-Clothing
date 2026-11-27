@@ -3897,3 +3897,263 @@ a {
     font-size: 15px;
   }
 }
+
+
+/* ADMIN ORDERS SEARCH, SORTING & PAGINATION */
+
+.admin-orders-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px 170px auto auto;
+  align-items: end;
+  gap: 16px;
+  width: 100%;
+  margin: 30px 0 18px;
+  padding: 24px;
+  background: var(--white);
+  border: 1px solid var(--beige);
+  box-sizing: border-box;
+}
+
+.admin-orders-search,
+.admin-orders-filter {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 9px;
+}
+
+.admin-orders-search label,
+.admin-orders-filter label {
+  display: block;
+  color: #77716a;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.admin-orders-search input,
+.admin-orders-filter select {
+  display: block;
+  width: 100%;
+  height: 46px;
+  margin: 0;
+  padding: 0 13px;
+  background: #fff;
+  border: 1px solid #ded6ca;
+  border-radius: 0;
+  color: var(--charcoal);
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-orders-search input:focus,
+.admin-orders-filter select:focus {
+  border-color: var(--mocha);
+}
+
+.admin-orders-search input::placeholder {
+  color: #aaa39a;
+}
+
+.admin-orders-filter-button,
+.admin-orders-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  margin: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.admin-orders-filter-button {
+  padding: 0 20px;
+  background: var(--charcoal);
+  border: 1px solid var(--charcoal);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.admin-orders-filter-button:hover {
+  background: var(--mocha);
+  border-color: var(--mocha);
+}
+
+.admin-orders-reset {
+  padding: 0 10px;
+  color: #77716a;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.admin-orders-reset:hover {
+  color: var(--charcoal);
+  text-decoration: underline;
+}
+
+.admin-orders-results {
+  margin: 0 0 14px;
+  color: #888078;
+  font-size: 12px;
+}
+
+/* Pagination */
+
+.admin-orders-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  margin-top: 22px;
+  padding: 18px 22px;
+  background: var(--white);
+  border: 1px solid var(--beige);
+  box-sizing: border-box;
+}
+
+.admin-orders-pagination > p {
+  margin: 0;
+  color: #77716a;
+  font-size: 12px;
+}
+
+.admin-orders-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-orders-page-link,
+.admin-orders-page-disabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--beige);
+  font-size: 11px;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.admin-orders-page-link {
+  background: var(--white);
+  color: var(--charcoal);
+  transition: 0.2s ease;
+}
+
+.admin-orders-page-link:hover {
+  background: var(--charcoal);
+  border-color: var(--charcoal);
+  color: var(--white);
+}
+
+.admin-orders-page-disabled {
+  background: #f7f4ef;
+  color: #aaa39a;
+  cursor: not-allowed;
+}
+
+/* Tablet */
+
+@media (max-width: 1100px) {
+  .admin-orders-filters {
+    grid-template-columns: minmax(0, 1fr) 1fr 1fr;
+  }
+
+  .admin-orders-search {
+    grid-column: 1 / -1;
+  }
+
+  .admin-orders-filter-button {
+    width: 100%;
+  }
+
+  .admin-orders-reset {
+    width: 100%;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .admin-orders-filters {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .admin-orders-search {
+    grid-column: auto;
+  }
+
+  .admin-orders-filter-button,
+  .admin-orders-reset {
+    width: 100%;
+  }
+
+  .admin-orders-pagination {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .admin-orders-pagination-controls {
+    width: 100%;
+  }
+
+  .admin-orders-page-link,
+  .admin-orders-page-disabled {
+    flex: 1;
+  }
+}
+
+/* ADMIN ORDER DELETE BUTTON */
+
+.admin-order-delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 75px;
+  height: 34px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid #c77b70;
+  color: #b64c40;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.admin-order-delete-button:hover {
+  background: #b64c40;
+  border-color: #b64c40;
+  color: #fff;
+}
+
+.admin-order-delete-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-order-delete-error {
+  max-width: 140px;
+  margin: 6px 0 0;
+  color: #b64c40;
+  font-size: 11px;
+}
