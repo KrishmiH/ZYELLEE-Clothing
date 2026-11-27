@@ -4340,3 +4340,402 @@ a {
     overflow-wrap: anywhere !important;
   }
 }
+
+
+/* =========================================
+   ZYELLEE THANK YOU CARDS
+   WHITE & CHAMPAGNE LUXURY
+========================================= */
+
+.thank-you-cards-page {
+  --tyc-black: #171717;
+  --tyc-gold: #b69a67;
+  --tyc-muted: #777777;
+  --tyc-border: #e5e5e5;
+
+  min-height: 100vh;
+  padding: 45px 5%;
+  background: #f5f5f5;
+  color: var(--tyc-black);
+  box-sizing: border-box;
+}
+
+/* TOOLBAR */
+
+.thank-you-cards-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  max-width: 1250px;
+  margin: 0 auto 35px;
+}
+
+.thank-you-cards-toolbar > div > p {
+  margin: 0 0 10px;
+  color: var(--tyc-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.thank-you-cards-toolbar h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 38px;
+  font-weight: 400;
+}
+
+.thank-you-cards-toolbar > div > span {
+  display: block;
+  margin-top: 9px;
+  color: var(--tyc-muted);
+  font-size: 13px;
+}
+
+.thank-you-cards-toolbar button {
+  min-height: 46px;
+  padding: 0 28px;
+  border: 1px solid var(--tyc-black);
+  background: var(--tyc-black);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.thank-you-cards-toolbar button:hover {
+  background: transparent;
+  color: var(--tyc-black);
+}
+
+/* SOCIAL MEDIA SETTINGS */
+
+.thank-you-cards-settings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1250px;
+  margin: 0 auto 35px;
+  padding: 25px;
+  background: #fff;
+  border: 1px solid var(--tyc-border);
+  box-sizing: border-box;
+}
+
+.thank-you-cards-settings h2 {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.thank-you-cards-settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  color: var(--tyc-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.thank-you-cards-settings input {
+  width: 100%;
+  min-height: 43px;
+  padding: 0 12px;
+  border: 1px solid var(--tyc-border);
+  outline: none;
+  background: #fff;
+  color: var(--tyc-black);
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.thank-you-cards-settings input:focus {
+  border-color: var(--tyc-gold);
+}
+
+/* PREVIEW HEADING */
+
+.thank-you-cards-preview-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 950px;
+  margin: 0 auto 15px;
+}
+
+.thank-you-cards-preview-heading span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.thank-you-cards-preview-heading p {
+  margin: 0;
+  color: var(--tyc-muted);
+  font-size: 12px;
+}
+
+/* SCREEN PREVIEW */
+
+.thank-you-cards-screen-preview {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.thank-you-cards-screen-preview .thank-you-cards-sheet {
+  display: grid;
+  grid-template-columns: repeat(2, 85mm);
+  grid-auto-rows: 55mm;
+  justify-content: center;
+  gap: 5mm;
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #e5e5e5;
+  box-sizing: border-box;
+}
+
+/* INDIVIDUAL CARD */
+
+.thank-you-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85mm;
+  height: 55mm;
+  padding: 4mm;
+  overflow: hidden;
+  background: #fff;
+  border: 0.3mm solid #e7e0d4;
+  box-sizing: border-box;
+  color: #171717;
+  text-align: center;
+}
+
+.thank-you-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+.thank-you-card-topline {
+  margin: 0 0 1.5mm;
+  color: #777;
+  font-family: Arial, sans-serif;
+  font-size: 5pt;
+  font-weight: 500;
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+.thank-you-card-content h2 {
+  margin: 0;
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25pt;
+  font-weight: 400;
+  letter-spacing: 3px;
+  line-height: 1.1;
+}
+
+.thank-you-card-rule {
+  flex-shrink: 0;
+  width: 15mm;
+  height: 0.4mm;
+  margin: 2mm auto;
+  background: #b69a67;
+}
+
+.thank-you-card-content h3 {
+  margin: 0 0 1.5mm;
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15pt;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.thank-you-card-message {
+  margin: 0;
+  color: #555;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 7pt;
+  line-height: 1.4;
+}
+
+.thank-you-card-signature {
+  margin: 2mm 0 0;
+  color: #b69a67;
+  font-family: Arial, sans-serif;
+  font-size: 5pt;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  line-height: 1.2;
+}
+
+.thank-you-card-socials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  gap: 1mm 2mm;
+  margin-top: 2mm;
+  color: #555;
+  font-family: Arial, sans-serif;
+  font-size: 4.5pt;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+
+.thank-you-card-socials span {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+/* PRINT ROOT - HIDDEN ON SCREEN */
+
+#thank-you-cards-print-root {
+  display: none;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+  .thank-you-cards-page {
+    padding: 28px 16px;
+  }
+
+  .thank-you-cards-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .thank-you-cards-settings {
+    grid-template-columns: 1fr;
+  }
+
+  .thank-you-cards-settings h2 {
+    grid-column: auto;
+  }
+
+  .thank-you-cards-screen-preview .thank-you-cards-sheet {
+    grid-template-columns: 85mm;
+    justify-content: center;
+  }
+}
+
+
+/* =========================================
+   PRINT SETTINGS
+   THANK YOU CARDS - A4
+========================================= */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@media print {
+
+  html,
+  body {
+    width: 190mm !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  /* Hide the normal website */
+
+  .thank-you-cards-page {
+    display: none !important;
+  }
+
+  /* Show the separate print portal */
+
+  body > #thank-you-cards-print-root {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 175mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    visibility: visible !important;
+  }
+
+  #thank-you-cards-print-root,
+  #thank-you-cards-print-root * {
+    visibility: visible !important;
+  }
+
+  /* A4 SHEET */
+
+  #thank-you-cards-print-root .thank-you-cards-sheet {
+    display: grid !important;
+    grid-template-columns: repeat(2, 85mm) !important;
+    grid-template-rows: repeat(4, 55mm) !important;
+    grid-auto-rows: 55mm !important;
+    justify-content: start !important;
+    gap: 5mm !important;
+    width: 175mm !important;
+    height: 235mm !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+  }
+
+  /* INDIVIDUAL CARDS */
+
+  #thank-you-cards-print-root .thank-you-card {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 85mm !important;
+    height: 55mm !important;
+    margin: 0 !important;
+    padding: 4mm !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    border: 0.3mm solid #e7e0d4 !important;
+    color: #171717 !important;
+    box-sizing: border-box !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #thank-you-cards-print-root .thank-you-card-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+}

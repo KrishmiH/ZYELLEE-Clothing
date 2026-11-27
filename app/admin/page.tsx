@@ -95,6 +95,11 @@ export default async function AdminDashboardPage() {
             <h2>Customers</h2>
             <p>View customer information.</p>
           </div>
+
+          <Link href="/admin/thank-you-cards" className="admin-dashboard-card">
+            <h2>Thank You Cards</h2>
+            <p>Print branded thank-you cards for customer packages.</p>
+          </Link>
         </div>
       </div>
     </main>
