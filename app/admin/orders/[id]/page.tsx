@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/admin-session";
 import { prisma } from "@/lib/prisma";
 import OrderStatusForm from "@/components/admin/OrderStatusForm";
+import PaymentStatusForm from "@/components/admin/PaymentStatusForm";
 
 export const instant = false;
 
@@ -128,6 +129,11 @@ export default async function OrderDetailsPage({
               </strong>
             </div>
 
+            <div className="admin-order-info-row">
+              <span>Payment Status</span>
+              <strong>{order.paymentStatus}</strong>
+            </div>
+
             <div className="admin-order-status-section">
               <span>Order Status</span>
 
@@ -135,6 +141,32 @@ export default async function OrderDetailsPage({
                 orderId={order.id}
                 currentStatus={order.status}
               />
+
+              {order.paymentMethod === "bank" && (
+                <div className="admin-order-status-section">
+                  <span>Payment Verification</span>
+
+                  {order.paymentReceipt ? (
+                    <a
+                      href={order.paymentReceipt}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="admin-order-link"
+                    >
+                      VIEW PAYMENT RECEIPT
+                    </a>
+                  ) : (
+                    <p>No payment receipt uploaded yet.</p>
+                  )}
+
+                  <PaymentStatusForm
+                    orderId={order.id}
+                    currentPaymentStatus={order.paymentStatus}
+                    hasReceipt={Boolean(order.paymentReceipt)}
+                  />
+                </div>
+              )}
+
             </div>
           </section>
         </div>

@@ -24,6 +24,9 @@ export default async function AdminOrdersPage() {
       email: true,
       total: true,
       status: true,
+      paymentMethod: true,
+      paymentStatus: true,
+      paymentReceipt: true,
       createdAt: true,
       items: {
         select: {
@@ -70,7 +73,10 @@ export default async function AdminOrdersPage() {
                   <th>Date</th>
                   <th>Items</th>
                   <th>Total</th>
-                  <th>Status</th>
+                  <th>Payment Method</th>
+                  <th>Payment Status</th>
+                  <th>Receipt</th>
+                  <th>Order Status</th>
                 </tr>
               </thead>
 
@@ -110,6 +116,33 @@ export default async function AdminOrdersPage() {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
+                    </td>
+
+                    <td>
+                      {order.paymentMethod === "bank" ? "Bank Transfer" : "Cash on Delivery"}
+                    </td>
+
+                    <td>
+                      <span
+                        className={`admin-order-status status-${order.paymentStatus.toLowerCase()}`}
+                      >
+                        {order.paymentStatus}
+                      </span>
+                    </td>
+
+                    <td>
+                      {order.paymentReceipt ? (
+                        <a
+                          href={order.paymentReceipt}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="admin-order-link"
+                        >
+                          View Receipt
+                        </a>
+                      ) : (
+                        <span>Not uploaded</span>
+                      )}
                     </td>
 
                     <td>
